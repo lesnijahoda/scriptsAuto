@@ -1,7 +1,11 @@
-echo "" > clean.conf
+soubor=$1
+nazev=$(basename "$soubor")
+vystup="cleaned_${nazev}"
+
+
 
 while read line; do
     if [[ $line != //* ]]; then
-        echo $line >> clean.conf
-    fi
-done < /etc/kea/kea-dhcp4.conf
+        echo $line >> "$vystup"
+fi
+done < "$soubor"
