@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -e
+
+soubor="$1"
+
+if [[ -z $soubor ]]; then
+    echo "Použití: strip-comments <soubor>"
+    exit 1
+fi
+
+if [[ ! -f $soubor ]]; then
+    echo "Soubor neexistuje: $soubor"
+    exit 1
+fi
+
+tmp="$(mktemp)"
+
+while IFS= read -r line; do
+    # // komentáře
+    [[ $line =~ ^[[:space:]]*// ]] && continue
+    # # komentáře (Samba, bash, atd.)
+    [[ $line =~ ^[[:space:]]*# ]] && continue
+
+    printf '%s\n' "$line" >> "$tmp"
+done < "$soubor"
+
+mv "$tmp" "$soubor"
